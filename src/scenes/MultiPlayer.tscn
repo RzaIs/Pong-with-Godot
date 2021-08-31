@@ -1,0 +1,150 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://src/scenes/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/scripts/MultiLevel.gd" type="Script" id=2]
+[ext_resource path="res://src/scenes/Ball.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/PoetsenOne-Regular.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://assets/ping_pong_8bit_beeep.ogg" type="AudioStream" id=6]
+
+[sub_resource type="SegmentShape2D" id=1]
+b = Vector2( 1024, 0 )
+
+[sub_resource type="SegmentShape2D" id=2]
+a = Vector2( 0, 600 )
+b = Vector2( 1024, 600 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 50
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 50
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 50
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 50
+font_data = ExtResource( 5 )
+
+[sub_resource type="SegmentShape2D" id=7]
+a = Vector2( -8, 0 )
+b = Vector2( -8, 600 )
+
+[sub_resource type="SegmentShape2D" id=8]
+a = Vector2( 1032, 600 )
+b = Vector2( 1032, 0 )
+
+[node name="Level" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 1024.0
+margin_bottom = 600.0
+color = Color( 0, 0.352941, 0.588235, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Walls" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D_1" type="CollisionShape2D" parent="Walls"]
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D_2" type="CollisionShape2D" parent="Walls"]
+shape = SubResource( 2 )
+
+[node name="Control" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Score1" type="Label" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 728.0
+margin_bottom = 56.0
+custom_fonts/font = SubResource( 3 )
+text = "test"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Score2" type="Label" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 256.0
+margin_right = 984.0
+margin_bottom = 56.0
+custom_fonts/font = SubResource( 4 )
+text = "test"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="space" type="Label" parent="Control"]
+margin_left = 448.0
+margin_right = 576.0
+margin_bottom = 96.0
+custom_fonts/font = SubResource( 5 )
+text = ":"
+align = 1
+valign = 1
+
+[node name="TimerLabel" type="Label" parent="Control"]
+margin_left = 480.0
+margin_top = 208.0
+margin_right = 544.0
+margin_bottom = 272.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player1" parent="." instance=ExtResource( 1 )]
+position = Vector2( 35, 300 )
+speed = 250.0
+playerNumber = 1
+
+[node name="Player2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 989, 300 )
+rotation = 3.14159
+speed = 250.0
+playerNumber = 2
+
+[node name="Ball" parent="." instance=ExtResource( 3 )]
+position = Vector2( 512, 300 )
+speed = 550.0
+
+[node name="Right" type="Area2D" parent="."]
+
+[node name="outer" type="CollisionShape2D" parent="Right"]
+shape = SubResource( 7 )
+
+[node name="Left" type="Area2D" parent="."]
+
+[node name="outer" type="CollisionShape2D" parent="Left"]
+shape = SubResource( 8 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="ScoreSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+
+[connection signal="body_entered" from="Right" to="." method="_on_Right_body_entered"]
+[connection signal="body_entered" from="Left" to="." method="_on_Left_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
